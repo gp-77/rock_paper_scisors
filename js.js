@@ -1,7 +1,12 @@
 const OPTIONS = ['rock', 'paper', 'scissors'];
 
+let playerScore = 0;
+let computerScore = 0;
+
+let container = document.querySelector(".container");
+
 function getComputerChoice() {
-    index = Math.floor(Math.random()*3);
+    index = Math.floor(Math.random() * OPTIONS.length);
     return OPTIONS[index];
 }
 
@@ -14,48 +19,61 @@ function playerSelection() {
 }
 
 
-function game(playerSelection, computerSelection) {
+function playRound(playerSelection, computerSelection = '') {
+    const resultDiv = document.createElement('div');
+    container.appendChild(resultDiv)
+
+    if(computerSelection === '') {
+        computerSelection = getComputerChoice();
+    }
 
     console.log(computerSelection);
     console.log(playerSelection);
 
     let winner = '';
+    let message = '';
 
     if(playerSelection == computerSelection){
-        console.log('There is a tie! No one wins!!!!');
+        message = 'There is a tie! No one wins!!!!';
         winner = 'tie';
     }else {
 
         switch(playerSelection) {
             case 'rock':
                 if(computerSelection == 'paper') {
-                    console.log('You Lose! Paper beats Rock');
+                    message = 'You Lose! Paper beats Rock';
                     winner = 'computer';
+                    computerScore++;
                 }else {
-                    console.log('You WIN! Rock beats Paper');
+                    message = 'You WIN! Rock beats Paper';
                     winner = 'player';
+                    playerScore++;
                 }
 
                 break;
 
             case 'paper':
                 if(computerSelection == 'scissors') {
-                    console.log('You Lose! Scissors beats Paper');
+                    message = 'You Lose! Scissors beats Paper';
                     winner = 'computer';
+                    computerScore++;
                 }else {
-                    console.log('You WIN! Paper beats Rock');
+                    message = 'You WIN! Paper beats Rock';
                     winner = 'player';
+                    playerScore++;
                 }
 
                 break;
 
             case 'scissors':
                 if(computerSelection == 'rock') {
-                    console.log('You Lose! Rock beats Scissors');
+                    message = 'You Lose! Rock beats Scissors';
                     winner = 'computer';
+                    computerScore++;
                 }else {
-                    console.log('You WIN! Scissors beats Paper');
+                    message = 'You WIN! Scissors beats Paper';
                     winner = 'player';
+                    playerScore++;
                 }
 
                 break;
@@ -64,65 +82,119 @@ function game(playerSelection, computerSelection) {
                 break;
         }
     }
+    resultDiv.textContent = message + "! " + `Player: ` + playerScore + `/ Computer:` + computerScore;
+
+    if(playerScore > 4) {
+        resultDiv.textContent += "PLAYER WINS!!!!!!!";
+        setTimeout(resetGame,3000);
+        // resetGame();
+    }
+
+    if( computerScore > 4) {
+        resultDiv.textContent += "COMPUTER WINS!!!!!!!";
+        setTimeout(resetGame,3000);
+        // resetGame();
+    }
+
     return winner;
 }
 
+function resetGame() {
+    playerScore = 0;
+    computerScore = 0;
+
+    document.body.innerHTML = '';
+
+    const div = document.createElement("div");
+
+    div.classList.add("container");
+
+    document.body.appendChild(div);
+
+    container = document.querySelector(".container");
+
+    playGame();
+}
+
 function playGame() {
+    const rock  = document.createElement("button");
+    const paper = document.createElement("button");
+    const scissors = document.createElement("button");
+    // const resultDiv = document.createElement('div');
 
-    let score = {
-        'player': 0,
-        'computer': 0,
-        'tie': 0
-    };
+    rock.innerText  = 'rock';
+    paper.innerText  = 'paper';
+    scissors.innerText  = 'scissors';
 
-    let winner = '';
-    let computerSelection = '';
-    let playerChoice = '';
+    container.appendChild(rock);
+    container.appendChild(paper);
+    container.appendChild(scissors);
+    // container.appendChild(resultDiv);
 
-    for(let i=0; i<5; i++) {
+    rock.addEventListener('click', () => {
+        const computerSelection = getComputerChoice();
+        const playerSelection = 'rock';
+        playRound(playerSelection, computerSelection);
+    });
 
-        computerSelection = getComputerChoice();
-        playerChoice = playerSelection();
+    paper.addEventListener('click', () => {
+        const computerSelection = getComputerChoice();
+        const playerSelection = 'paper';
+        playRound(playerSelection, computerSelection);
+    });
 
-        winner = game(playerChoice, computerSelection);
+    scissors.addEventListener('click', () => {
+        const computerSelection = getComputerChoice();
+        const playerSelection = 'scissors';
+        playRound(playerSelection, computerSelection);
+    });
 
-        switch(winner) {
-            case 'computer':
-                score['computer']++;
-                break;
-            case 'player':
-                score['player']++;
-                break;
-            case 'tie':
-                score['tie']++;
-                break;
-            default:
-                break;
-        }
-
-    }
-
-    if(score['computer'] > score['player']) {
-        console.log("COMPUTER WINS");
-    }else if(score['computer'] < score['player']) {
-        console.log("COMPUTER WINS");
-    }else{
-        console.log("it is a tie");
-    }
-
-    console.log(score);
 }
 
 playGame();
 
+// function playGame() {
+
+//     let score = {
+//         'player': 0,
+//         'computer': 0,
+//         'tie': 0
+//     };
+
+//     let winner = '';
+//     let computerSelection = '';
+//     let playerChoice = '';
+
+//     computerSelection = getComputerChoice();
+//     playerChoice = playerSelection();
+
+//     winner = playRound(playerChoice, computerSelection);
+
+//     switch(winner) {
+//         case 'computer':
+//             score['computer']++;
+//             break;
+//         case 'player':
+//             score['player']++;
+//             break;
+//         case 'tie':
+//             score['tie']++;
+//             break;
+//         default:
+//             break;
+//     }
+
+//     if(score['computer'] > score['player']) {
+//         console.log("COMPUTER WINS");
+//     }else if(score['computer'] < score['player']) {
+//         console.log("COMPUTER WINS");
+//     }else{
+//         console.log("it is a tie");
+//     }
+
+//     console.log(score);
+// }
+
+// playGame();
 
 
-
-// function playRound(playerSelection, computerSelection) {
-//     // your code here!
-//   }
-  
-//   const playerSelection = "rock";
-//   const computerSelection = getComputerChoice();
-//   console.log(playRound(playerSelection, computerSelection));
-  
